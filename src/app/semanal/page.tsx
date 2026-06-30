@@ -2,51 +2,66 @@
 
 import { useApp } from "@/context/AppContext";
 import { AppShell } from "@/components/Navigation";
+import { RouteGuard } from "@/components/RouteGuard";
 import { Card, Button, Badge, PageHeader, StatCard } from "@/components/ui";
 import { createWeeklyReview } from "@/lib/science";
 import { formatDate } from "@/lib/storage";
 import { CalendarCheck, ArrowRight, CheckCircle } from "lucide-react";
 
-export default function SemanalPage() {
+function SemanalContent() {
   const { state, update } = useApp();
-
-  if (!state.profile || !state.macroTargets) return null;
-
-  const { weeklyReviews } = state;
+  const { weeklyReviews, profile, macroTargets } = state;
   const latestReview = weeklyReviews[weeklyReviews.length - 1];
 
   function runWeeklyReview() {
     const review = createWeeklyReview(
-      state.profile!,
-      state.macroTargets!,
+      profile!,
+      macroTargets!,
       state.weightEntries,
       state.foodEntries,
-      state.workoutSessions
+      state.workoutSessions,
+      state.dailyLogs,
+      state.dismissedRecommendations
     );
     update({ weeklyReviews: [...weeklyReviews, review] });
   }
 
   function applyAdjustments() {
-    if (!latestReview || !state.macroTargets) return;
+    if (!latestReview || !macroTargets) return;
 
-    const calAdj = latestReview.adjustments.find((a) => a.type === "calories");
-    if (calAdj && typeof calAdj.new === "number") {
-      const diff = calAdj.new - (calAdj.previous as number);
-      const ratio = calAdj.new / (calAdj.previous as number);
-      update({
-        macroTargets: {
-          ...state.macroTargets,
-          calories: calAdj.new as number,
-          carbs: Math.round(state.macroTargets.carbs * ratio),
-          fat: Math.round(state.macroTargets.fat * ratio),
-        },
-      });
+    let newMacros = { ...macroTargets };
+    let newProfile = profile ? { ...profile } : null;
+
+    for (const adj of latestReview.adjustments) {
+      if (adj.type === "calories" && typeof adj.new === "number") {
+        const ratio = adj.new / (adj.previous as number);
+        newMacros = {
+          ...newMacros,
+          calories: adj.new,
+          carbs: Math.round(newMacros.carbs * ratio),
+          fat: Math.round(newMacros.fat * ratio),
+          calculatedAtWeightKg: profile?.weightKg,
+        };
+      }
+      if (adj.type === "protein" && typeof adj.new === "number") {
+        newMacros = { ...newMacros, protein: adj.new };
+      }
+      if (adj.type === "training_volume" && newProfile) {
+        const match = String(adj.new).match(/(\d+)/);
+        if (match) {
+          newProfile = { ...newProfile, trainingDaysPerWeek: parseInt(match[1]) };
+        }
+      }
     }
+
+    update({
+      macroTargets: newMacros,
+      ...(newProfile ? { profile: newProfile } : {}),
+    });
   }
 
   return (
-    <AppShell>
-      <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
+    <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
         <PageHeader
           title="Ajustes semanales"
           subtitle="Revisión automática basada en tu progreso real"
@@ -235,7 +250,16 @@ export default function SemanalPage() {
             )}
           </>
         )}
-      </div>
+    </div>
+  );
+}
+
+export default function SemanalPage() {
+  return (
+    <AppShell>
+      <RouteGuard>
+        <SemanalContent />
+      </RouteGuard>
     </AppShell>
   );
 }

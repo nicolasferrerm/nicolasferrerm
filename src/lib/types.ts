@@ -1,9 +1,13 @@
-export type Gender = "male" | "female";
+export const SCHEMA_VERSION = 2;
+
+export type Gender = "male" | "female" | "other";
 export type Goal = "lose_fat" | "gain_muscle" | "maintain" | "recomp" | "performance";
 export type ActivityLevel = "sedentary" | "light" | "moderate" | "active" | "very_active";
 export type ExperienceLevel = "beginner" | "intermediate" | "advanced";
 export type MuscleGroup = "chest" | "back" | "shoulders" | "biceps" | "triceps" | "legs" | "core" | "full_body";
 export type MealType = "breakfast" | "lunch" | "dinner" | "snack";
+export type EquipmentType = "full_gym" | "dumbbells_only" | "home_no_equipment" | "bands" | "barbell_rack";
+export type InjuryArea = "knee" | "shoulder" | "lower_back" | "hip" | "wrist" | "ankle";
 
 export interface UserProfile {
   name: string;
@@ -15,6 +19,10 @@ export interface UserProfile {
   activityLevel: ActivityLevel;
   experienceLevel: ExperienceLevel;
   trainingDaysPerWeek: number;
+  equipment: EquipmentType;
+  injuries: InjuryArea[];
+  parqCompleted: boolean;
+  parqPositiveAnswers: boolean;
   createdAt: string;
 }
 
@@ -24,6 +32,7 @@ export interface MacroTargets {
   carbs: number;
   fat: number;
   fiber: number;
+  calculatedAtWeightKg?: number;
 }
 
 export interface WeightEntry {
@@ -119,7 +128,13 @@ export interface DailyLog {
   notes?: string;
 }
 
+export interface DismissedRecommendation {
+  id: string;
+  dismissedAt: string;
+}
+
 export interface AppState {
+  schemaVersion: number;
   profile: UserProfile | null;
   macroTargets: MacroTargets | null;
   weightEntries: WeightEntry[];
@@ -128,10 +143,12 @@ export interface AppState {
   activeRoutine: Routine | null;
   dailyLogs: DailyLog[];
   weeklyReviews: WeeklyReview[];
+  dismissedRecommendations: DismissedRecommendation[];
   onboardingComplete: boolean;
 }
 
 export const DEFAULT_APP_STATE: AppState = {
+  schemaVersion: SCHEMA_VERSION,
   profile: null,
   macroTargets: null,
   weightEntries: [],
@@ -140,5 +157,6 @@ export const DEFAULT_APP_STATE: AppState = {
   activeRoutine: null,
   dailyLogs: [],
   weeklyReviews: [],
+  dismissedRecommendations: [],
   onboardingComplete: false,
 };

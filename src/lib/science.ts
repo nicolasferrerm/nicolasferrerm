@@ -13,7 +13,13 @@ import type {
   WeeklyAdjustment,
   MuscleGroup,
   Routine,
+  DailyLog,
+  EquipmentType,
+  InjuryArea,
+  DismissedRecommendation,
 } from "./types";
+import { getExercisesForMuscle } from "./exercises";
+import { isRecommendationDismissed } from "./helpers";
 
 // ─── Metabolismo (Mifflin-St Jeor, 1990) ───────────────────────────────────
 export function calculateBMR(
@@ -23,7 +29,9 @@ export function calculateBMR(
   gender: Gender
 ): number {
   const base = 10 * weightKg + 6.25 * heightCm - 5 * age;
-  return gender === "male" ? base + 5 : base - 161;
+  if (gender === "male") return base + 5;
+  if (gender === "female") return base - 161;
+  return Math.round((base + 5 + base - 161) / 2);
 }
 
 const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
@@ -83,9 +91,44 @@ export function calculateMacros(profile: UserProfile, tdee: number): MacroTarget
   const protein = Math.round(weightKg * proteinPerKg);
   const fat = Math.round((calories * fatPercent) / 9);
   const carbs = Math.round((calories - protein * 4 - fat * 9) / 4);
-  const fiber = Math.round(weightKg * 0.4); // 14g/100divcal aprox.
+  const fiber = Math.round(weightKg * 0.4);
 
-  return { calories, protein, carbs, fat, fiber };
+  return {
+    calories,
+    protein,
+    carbs,
+    fat,
+    fiber,
+    calculatedAtWeightKg: weightKg,
+  };
+}
+
+export function shouldRecalculateMacros(
+  macroTargets: MacroTargets,
+  currentWeightKg: number,
+  thresholdKg = 1
+): boolean {
+  const base = macroTargets.calculatedAtWeightKg ?? currentWeightKg;
+  return Math.abs(currentWeightKg - base) >= thresholdKg;
+}
+
+export function recalculateMacrosFromWeight(
+  profile: UserProfile,
+  newWeightKg: number
+): { tdee: number; macros: MacroTargets } {
+  const updatedProfile = { ...profile, weightKg: newWeightKg };
+  const tdee = calculateTDEE(updatedProfile);
+  const macros = calculateMacros(updatedProfile, tdee);
+  return { tdee, macros };
+}
+
+export function movingAverageWeight(entries: WeightEntry[], window = 7): number {
+  if (entries.length === 0) return 0;
+  const sorted = [...entries].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+  const recent = sorted.slice(-window);
+  return Math.round((recent.reduce((s, e) => s + e.weightKg, 0) / recent.length) * 10) / 10;
 }
 
 // ─── Análisis de tendencia de peso ───────────────────────────────────────────
@@ -166,7 +209,9 @@ export function generateCoachRecommendations(
   weightEntries: WeightEntry[],
   foodEntries: FoodEntry[],
   workoutSessions: WorkoutSession[],
-  days = 7
+  days = 7,
+  dailyLogs: DailyLog[] = [],
+  dismissed: DismissedRecommendation[] = []
 ): CoachRecommendation[] {
   const recs: CoachRecommendation[] = [];
   const now = new Date();
@@ -177,6 +222,20 @@ export function generateCoachRecommendations(
     (w) => new Date(w.date) >= cutoff && w.completed
   );
   const weightTrend = analyzeWeightTrend(weightEntries);
+  const avgSleep =
+    dailyLogs.filter((d) => d.sleepHours).length > 0
+      ? dailyLogs
+          .filter((d) => d.sleepHours)
+          .reduce((s, d) => s + (d.sleepHours ?? 0), 0) /
+        dailyLogs.filter((d) => d.sleepHours).length
+      : 0;
+
+  const daysWithData = new Set([
+    ...recentFood.map((f) => f.date),
+    ...weightEntries.filter((w) => new Date(w.date) >= cutoff).map((w) => w.date),
+    ...recentWorkouts.map((w) => w.date),
+  ]).size;
+  const dataCompleteness = days > 0 ? (daysWithData / days) * 100 : 0;
 
   const avgCalories =
     recentFood.length > 0
@@ -189,6 +248,27 @@ export function generateCoachRecommendations(
       ? recentFood.reduce((s, f) => s + f.protein, 0) /
         new Set(recentFood.map((f) => f.date)).size
       : 0;
+
+  const plannedPerWeek = profile.trainingDaysPerWeek;
+  const actualPerWeek = recentWorkouts.length / (days / 7);
+
+  // Completitud de datos
+  if (dataCompleteness < 50 && !isRecommendationDismissed(dismissed, "data-completeness")) {
+    recs.push({
+      id: "data-completeness",
+      category: "general",
+      priority: "high",
+      title: "Mejora tu registro de datos",
+      message: `Solo ${Math.round(dataCompleteness)}% de días con datos esta semana. Más datos = mejores ajustes.`,
+      scienceBasis:
+        "El auto-monitoreo consistente predice éxito a largo plazo (Burke et al., 2011).",
+      actionItems: [
+        "Registra al menos peso y una comida al día",
+        "Completa tu entreno cuando lo hagas",
+        "Toma 2 minutos cada noche para registrar",
+      ],
+    });
+  }
 
   // Nutrición
   if (recentFood.length === 0) {
@@ -243,9 +323,10 @@ export function generateCoachRecommendations(
     });
   }
 
-  // Peso
+  // Peso — lógica por objetivo
   if (weightEntries.length >= 3) {
     const { trend, weeklyChange } = weightTrend;
+
     if (profile.goal === "lose_fat" && trend !== "losing") {
       recs.push({
         id: "weight-plateau-fat",
@@ -276,12 +357,55 @@ export function generateCoachRecommendations(
           "Duerme mínimo 7-8 horas",
         ],
       });
+    } else if (profile.goal === "recomp") {
+      if (weeklyChange < -0.5) {
+        recs.push({
+          id: "recomp-losing-fast",
+          category: "weight",
+          priority: "high",
+          title: "Pérdida rápida en recomposición",
+          message: `Bajando ${Math.abs(weeklyChange)} kg/sem — riesgo de perder músculo.`,
+          scienceBasis: "En recomposición el déficit debe ser leve para preservar masa muscular (Helms et al., 2014).",
+          actionItems: ["Aumenta 150 kcal", "Prioriza proteína en cada comida"],
+        });
+      } else if (weeklyChange > 0.3) {
+        recs.push({
+          id: "recomp-gaining",
+          category: "weight",
+          priority: "medium",
+          title: "Ganancia de peso en recomposición",
+          message: "Estás ganando peso. En recomp buscamos estabilidad con cambio de composición.",
+          scienceBasis: "La recomposición funciona mejor con peso estable y alto volumen de entrenamiento.",
+          actionItems: ["Reduce 100-150 kcal", "Mantén proteína alta"],
+        });
+      }
+    } else if (profile.goal === "maintain" && Math.abs(weeklyChange) > 0.5) {
+      recs.push({
+        id: "maintain-drift",
+        category: "weight",
+        priority: "medium",
+        title: "Peso fuera de rango de mantenimiento",
+        message: `Cambio de ${weeklyChange} kg/sem. Objetivo: ±0.25 kg/sem.`,
+        scienceBasis: "Fluctuaciones >0.5 kg/sem en mantenimiento sugieren desajuste calórico.",
+        actionItems: [
+          weeklyChange > 0 ? "Reduce 100 kcal" : "Aumenta 100 kcal",
+          "Revisa porciones y snacks",
+        ],
+      });
+    } else if (profile.goal === "performance" && actualPerWeek < plannedPerWeek * 0.8) {
+      recs.push({
+        id: "performance-adherence",
+        category: "training",
+        priority: "high",
+        title: "Consistencia clave para rendimiento",
+        message: "El rendimiento requiere adherencia al plan de entrenamiento.",
+        scienceBasis: "La consistencia del estímulo es el predictor #1 de adaptación (Fisher et al., 2017).",
+        actionItems: ["Prioriza sesiones programadas", "Carbohidratos pre/post entreno"],
+      });
     }
   }
 
   // Entrenamiento
-  const plannedPerWeek = profile.trainingDaysPerWeek;
-  const actualPerWeek = recentWorkouts.length / (days / 7);
   if (actualPerWeek < plannedPerWeek * 0.7) {
     recs.push({
       id: "training-adherence",
@@ -310,26 +434,36 @@ export function generateCoachRecommendations(
     });
   }
 
-  // Recuperación
-  recs.push({
-    id: "recovery-sleep",
-    category: "recovery",
-    priority: "medium",
-    title: "Prioriza el sueño",
-    message: "El sueño es cuando ocurre la mayor parte de la recuperación muscular.",
-    scienceBasis:
-      "Dormir <7h reduce síntesis proteica un 18% y aumenta cortisol (Dattilo et al., 2011).",
-    actionItems: [
-      "Objetivo: 7-9 horas por noche",
-      "Evita pantallas 1h antes de dormir",
-      "Mantén horario consistente",
-    ],
-  });
+  // Recuperación — solo si sueño insuficiente o sin datos
+  if (
+    (avgSleep === 0 || avgSleep < 7) &&
+    !isRecommendationDismissed(dismissed, "recovery-sleep")
+  ) {
+    recs.push({
+      id: "recovery-sleep",
+      category: "recovery",
+      priority: avgSleep > 0 && avgSleep < 6 ? "high" : "medium",
+      title: "Prioriza el sueño",
+      message:
+        avgSleep > 0
+          ? `Promedio: ${avgSleep.toFixed(1)}h. Objetivo: 7-9 horas.`
+          : "El sueño es cuando ocurre la mayor parte de la recuperación muscular.",
+      scienceBasis:
+        "Dormir <7h reduce síntesis proteica un 18% y aumenta cortisol (Dattilo et al., 2011).",
+      actionItems: [
+        "Objetivo: 7-9 horas por noche",
+        "Evita pantallas 1h antes de dormir",
+        "Mantén horario consistente",
+      ],
+    });
+  }
 
-  return recs.sort((a, b) => {
-    const priority = { high: 0, medium: 1, low: 2 };
-    return priority[a.priority] - priority[b.priority];
-  });
+  return recs
+    .filter((r) => !isRecommendationDismissed(dismissed, r.id))
+    .sort((a, b) => {
+      const priority = { high: 0, medium: 1, low: 2 };
+      return priority[a.priority] - priority[b.priority];
+    });
 }
 
 // ─── Ajustes semanales automáticos ───────────────────────────────────────────
@@ -400,6 +534,63 @@ export function generateWeeklyAdjustments(
         });
       }
       break;
+
+    case "recomp":
+      if (weightTrend.weeklyChange < -0.4) {
+        adjustments.push({
+          type: "calories",
+          previous: macroTargets.calories,
+          new: macroTargets.calories + 150,
+          reason: "Pérdida rápida en recomposición. Aumento leve para preservar músculo.",
+        });
+      } else if (weightTrend.weeklyChange > 0.3) {
+        adjustments.push({
+          type: "calories",
+          previous: macroTargets.calories,
+          new: macroTargets.calories - 100,
+          reason: "Ganancia de peso en recomp. Reducción leve para estabilizar.",
+        });
+      }
+      if (avgCalories > 0 && avgCalories < macroTargets.protein * 4 + 200) {
+        adjustments.push({
+          type: "protein",
+          previous: macroTargets.protein,
+          new: macroTargets.protein + 10,
+          reason: "Priorizar proteína en recomposición corporal.",
+        });
+      }
+      break;
+
+    case "maintain":
+      if (Math.abs(weightTrend.weeklyChange) > 0.4) {
+        const delta = weightTrend.weeklyChange > 0 ? -100 : 100;
+        adjustments.push({
+          type: "calories",
+          previous: macroTargets.calories,
+          new: macroTargets.calories + delta,
+          reason: "Peso fuera del rango de mantenimiento. Ajuste calórico moderado.",
+        });
+      }
+      break;
+
+    case "performance":
+      if (recentWorkouts.length < profile.trainingDaysPerWeek) {
+        adjustments.push({
+          type: "training_volume",
+          previous: `${profile.trainingDaysPerWeek} días`,
+          new: `${profile.trainingDaysPerWeek} días (priorizar consistencia)`,
+          reason: "Rendimiento requiere adherencia al plan de entrenamiento.",
+        });
+      }
+      if (avgCalories > 0 && avgCalories < macroTargets.calories * 0.9) {
+        adjustments.push({
+          type: "calories",
+          previous: macroTargets.calories,
+          new: macroTargets.calories + 150,
+          reason: "Energía insuficiente para rendimiento óptimo.",
+        });
+      }
+      break;
   }
 
   if (recentWorkouts.length < profile.trainingDaysPerWeek * 0.6) {
@@ -426,40 +617,49 @@ export function generateWeeklyAdjustments(
 }
 
 // ─── Generador de rutinas ────────────────────────────────────────────────────
-const EXERCISE_DB: Record<MuscleGroup, string[]> = {
-  chest: ["Press banca", "Press inclinado mancuernas", "Aperturas", "Fondos"],
-  back: ["Dominadas", "Remo con barra", "Jalón al pecho", "Remo mancuerna"],
-  shoulders: ["Press militar", "Elevaciones laterales", "Pájaros", "Face pulls"],
-  biceps: ["Curl barra", "Curl martillo", "Curl concentrado"],
-  triceps: ["Press francés", "Extensiones polea", "Fondos banco"],
-  legs: ["Sentadilla", "Peso muerto rumano", "Prensa", "Zancadas", "Curl femoral"],
-  core: ["Plancha", "Crunch bicicleta", "Elevaciones piernas"],
-  full_body: ["Burpees", "Kettlebell swing", "Thrusters"],
-};
-
 function createExercises(
   groups: MuscleGroup[],
-  experience: ExperienceLevel
+  experience: ExperienceLevel,
+  equipment: EquipmentType,
+  injuries: InjuryArea[]
 ): import("./types").Exercise[] {
   const sets = experience === "beginner" ? 3 : experience === "intermediate" ? 4 : 5;
-  const reps = experience === "beginner" ? "10-12" : experience === "intermediate" ? "8-12" : "6-10";
+  const reps =
+    experience === "beginner" ? "10-12" : experience === "intermediate" ? "8-12" : "6-10";
 
-  return groups.flatMap((group) =>
-    EXERCISE_DB[group].slice(0, 2).map((name, i) => ({
+  return groups.flatMap((group) => {
+    const available = getExercisesForMuscle(group, equipment, injuries);
+    const selected = available.slice(0, 2);
+    if (selected.length === 0) {
+      const fallback = getExercisesForMuscle(group, "home_no_equipment", injuries);
+      return fallback.slice(0, 1).map((ex, i) => ({
+        id: `${group}-${i}-${Date.now()}`,
+        name: ex.name,
+        muscleGroup: group,
+        sets,
+        reps,
+        restSeconds: group === "legs" ? 120 : 90,
+        notes: ex.instructions,
+      }));
+    }
+    return selected.map((ex, i) => ({
       id: `${group}-${i}-${Date.now()}`,
-      name,
+      name: ex.name,
       muscleGroup: group,
       sets,
       reps,
       restSeconds: group === "legs" ? 120 : 90,
-    }))
-  );
+      notes: ex.instructions,
+    }));
+  });
 }
 
 export function generateRoutine(
   goal: Goal,
   experience: ExperienceLevel,
-  daysPerWeek: number
+  daysPerWeek: number,
+  equipment: EquipmentType = "full_gym",
+  injuries: InjuryArea[] = []
 ): Routine {
   const templates: Record<number, { name: string; groups: MuscleGroup[] }[]> = {
     3: [
@@ -502,7 +702,7 @@ export function generateRoutine(
     experienceLevel: experience,
     sessions: template.map((t) => ({
       name: t.name,
-      exercises: createExercises(t.groups, experience),
+      exercises: createExercises(t.groups, experience, equipment, injuries),
       notes: `Sesión ${t.name}`,
     })),
   };
@@ -590,7 +790,9 @@ export function createWeeklyReview(
   macroTargets: MacroTargets,
   weightEntries: WeightEntry[],
   foodEntries: FoodEntry[],
-  workoutSessions: WorkoutSession[]
+  workoutSessions: WorkoutSession[],
+  dailyLogs: DailyLog[] = [],
+  dismissed: DismissedRecommendation[] = []
 ): WeeklyReview {
   const now = new Date();
   const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -611,7 +813,10 @@ export function createWeeklyReview(
     macroTargets,
     weightEntries,
     foodEntries,
-    workoutSessions
+    workoutSessions,
+    7,
+    dailyLogs,
+    dismissed
   );
   const adjustments = generateWeeklyAdjustments(
     profile,

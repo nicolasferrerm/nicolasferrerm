@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { AppShell } from "@/components/Navigation";
+import { RouteGuard } from "@/components/RouteGuard";
 import {
   Card,
   Button,
@@ -17,20 +18,32 @@ import type { WorkoutSession } from "@/lib/types";
 import { Check, Play, RefreshCw } from "lucide-react";
 
 export default function RutinasPage() {
+  return (
+    <AppShell>
+      <RouteGuard>
+        <RutinasContent />
+      </RouteGuard>
+    </AppShell>
+  );
+}
+
+function RutinasContent() {
   const { state, update } = useApp();
   const [activeSession, setActiveSession] = useState<number | null>(null);
   const [completedSets, setCompletedSets] = useState<Record<string, number>>({});
 
   if (!state.profile) return null;
 
-  const { activeRoutine, workoutSessions } = state;
+  const { activeRoutine, workoutSessions, profile } = state;
 
   function regenerateRoutine() {
     if (!state.profile) return;
     const routine = generateRoutine(
       state.profile.goal,
       state.profile.experienceLevel,
-      state.profile.trainingDaysPerWeek
+      state.profile.trainingDaysPerWeek,
+      state.profile.equipment,
+      state.profile.injuries
     );
     update({ activeRoutine: routine });
   }
@@ -70,22 +83,19 @@ export default function RutinasPage() {
 
   if (!activeRoutine) {
     return (
-      <AppShell>
-        <div className="p-4 lg:p-8 max-w-4xl mx-auto">
-          <EmptyState
-            icon="🏋️"
-            title="Sin rutina activa"
-            description="Genera una rutina personalizada basada en tu objetivo y experiencia."
-            action={<Button onClick={regenerateRoutine}>Generar rutina</Button>}
-          />
-        </div>
-      </AppShell>
+      <div className="p-4 lg:p-8 max-w-4xl mx-auto">
+        <EmptyState
+          icon="🏋️"
+          title="Sin rutina activa"
+          description="Genera una rutina personalizada basada en tu objetivo y experiencia."
+          action={<Button onClick={regenerateRoutine}>Generar rutina</Button>}
+        />
+      </div>
     );
   }
 
   return (
-    <AppShell>
-      <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
+    <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
         <PageHeader
           title="Rutinas"
           subtitle={activeRoutine.description}
@@ -131,6 +141,9 @@ export default function RutinasPage() {
                           {getMuscleLabel(ex.muscleGroup)} · {ex.sets}x{ex.reps} ·{" "}
                           {ex.restSeconds}s descanso
                         </p>
+                        {ex.notes && (
+                          <p className="text-xs text-zinc-600 mt-1">{ex.notes}</p>
+                        )}
                       </div>
                       <Badge color={done >= ex.sets ? "emerald" : "zinc"}>
                         {done}/{ex.sets}
@@ -230,7 +243,6 @@ export default function RutinasPage() {
             </div>
           </div>
         )}
-      </div>
-    </AppShell>
+    </div>
   );
 }

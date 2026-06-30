@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { AppShell } from "@/components/Navigation";
+import { RouteGuard } from "@/components/RouteGuard";
 import {
   Card,
   Button,
@@ -18,6 +19,16 @@ import type { MealType } from "@/lib/types";
 import { Plus, Trash2 } from "lucide-react";
 
 export default function NutricionPage() {
+  return (
+    <AppShell>
+      <RouteGuard>
+        <NutricionContent />
+      </RouteGuard>
+    </AppShell>
+  );
+}
+
+function NutricionContent() {
   const { state, update } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [mealType, setMealType] = useState<MealType>("lunch");
@@ -87,8 +98,7 @@ export default function NutricionPage() {
   const meals: MealType[] = ["breakfast", "lunch", "snack", "dinner"];
 
   return (
-    <AppShell>
-      <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
+    <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
         <PageHeader
           title="Nutrición"
           subtitle={`Objetivo: ${macroTargets.calories} kcal · ${macroTargets.protein}g proteína`}
@@ -225,7 +235,6 @@ export default function NutricionPage() {
             ))}
           </div>
         </div>
-      </div>
-    </AppShell>
+    </div>
   );
 }

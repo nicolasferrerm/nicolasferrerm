@@ -2,30 +2,31 @@
 
 import { useApp } from "@/context/AppContext";
 import { AppShell } from "@/components/Navigation";
-import { Card, Badge, PageHeader } from "@/components/ui";
+import { RouteGuard } from "@/components/RouteGuard";
+import { Card, Badge, PageHeader, Button } from "@/components/ui";
 import { generateCoachRecommendations } from "@/lib/science";
 import { getPriorityColor, getCategoryIcon } from "@/lib/storage";
-import { Brain, BookOpen, ListChecks } from "lucide-react";
+import { Brain, BookOpen, ListChecks, X } from "lucide-react";
 
-export default function CoachPage() {
-  const { state } = useApp();
-
-  if (!state.profile || !state.macroTargets) return null;
+function CoachContent() {
+  const { state, dismissRec } = useApp();
 
   const recommendations = generateCoachRecommendations(
-    state.profile,
-    state.macroTargets,
+    state.profile!,
+    state.macroTargets!,
     state.weightEntries,
     state.foodEntries,
-    state.workoutSessions
+    state.workoutSessions,
+    7,
+    state.dailyLogs,
+    state.dismissedRecommendations
   );
 
   const highPriority = recommendations.filter((r) => r.priority === "high");
   const others = recommendations.filter((r) => r.priority !== "high");
 
   return (
-    <AppShell>
-      <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
+    <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
         <PageHeader
           title="Coach inteligente"
           subtitle="Recomendaciones basadas en tus datos y evidencia científica"
@@ -39,19 +40,19 @@ export default function CoachPage() {
             </div>
             <div>
               <h2 className="font-semibold text-white">
-                Análisis de {state.profile.name}
+                Análisis de {state.profile!.name}
               </h2>
               <p className="text-sm text-zinc-400 mt-1">
                 He analizado tu nutrición, entrenamiento y peso de los últimos 7 días.
                 Aquí están mis recomendaciones priorizadas según tu objetivo de{" "}
                 <span className="text-emerald-400">
-                  {state.profile.goal === "lose_fat"
+                  {state.profile!.goal === "lose_fat"
                     ? "pérdida de grasa"
-                    : state.profile.goal === "gain_muscle"
+                    : state.profile!.goal === "gain_muscle"
                     ? "ganancia muscular"
-                    : state.profile.goal === "recomp"
+                    : state.profile!.goal === "recomp"
                     ? "recomposición"
-                    : state.profile.goal === "performance"
+                    : state.profile!.goal === "performance"
                     ? "rendimiento"
                     : "mantenimiento"}
                 </span>
@@ -69,7 +70,7 @@ export default function CoachPage() {
             </h3>
             <div className="space-y-3">
               {highPriority.map((rec) => (
-                <RecommendationCard key={rec.id} rec={rec} />
+                <RecommendationCard key={rec.id} rec={rec} onDismiss={dismissRec} />
               ))}
             </div>
           </div>
@@ -82,7 +83,7 @@ export default function CoachPage() {
           </h3>
           <div className="space-y-3">
             {others.map((rec) => (
-              <RecommendationCard key={rec.id} rec={rec} />
+              <RecommendationCard key={rec.id} rec={rec} onDismiss={dismissRec} />
             ))}
           </div>
         </div>
@@ -94,38 +95,58 @@ export default function CoachPage() {
             </p>
           </Card>
         )}
-      </div>
+    </div>
+  );
+}
+
+export default function CoachPage() {
+  return (
+    <AppShell>
+      <RouteGuard>
+        <CoachContent />
+      </RouteGuard>
     </AppShell>
   );
 }
 
 function RecommendationCard({
   rec,
+  onDismiss,
 }: {
   rec: ReturnType<typeof generateCoachRecommendations>[0];
+  onDismiss: (id: string) => void;
 }) {
   return (
     <Card className={`border ${getPriorityColor(rec.priority)}`}>
       <div className="flex items-start gap-3">
         <span className="text-xl">{getCategoryIcon(rec.category)}</span>
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <h4 className="font-semibold text-white text-sm">{rec.title}</h4>
-            <Badge
-              color={
-                rec.priority === "high"
-                  ? "red"
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <div className="flex items-center gap-2">
+              <h4 className="font-semibold text-white text-sm">{rec.title}</h4>
+              <Badge
+                color={
+                  rec.priority === "high"
+                    ? "red"
+                    : rec.priority === "medium"
+                      ? "amber"
+                      : "emerald"
+                }
+              >
+                {rec.priority === "high"
+                  ? "Alta"
                   : rec.priority === "medium"
-                    ? "amber"
-                    : "emerald"
-              }
+                    ? "Media"
+                    : "Baja"}
+              </Badge>
+            </div>
+            <button
+              onClick={() => onDismiss(rec.id)}
+              className="text-zinc-600 hover:text-zinc-400 shrink-0"
+              title="Descartar por 7 días"
             >
-              {rec.priority === "high"
-                ? "Alta"
-                : rec.priority === "medium"
-                  ? "Media"
-                  : "Baja"}
-            </Badge>
+              <X size={14} />
+            </button>
           </div>
           <p className="text-sm text-zinc-400">{rec.message}</p>
 

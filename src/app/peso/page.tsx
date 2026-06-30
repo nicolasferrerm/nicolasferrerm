@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { AppShell } from "@/components/Navigation";
+import { RouteGuard } from "@/components/RouteGuard";
 import { Card, Button, PageHeader, Input, StatCard } from "@/components/ui";
-import { analyzeWeightTrend } from "@/lib/science";
+import { analyzeWeightTrend, movingAverageWeight, shouldRecalculateMacros, recalculateMacrosFromWeight } from "@/lib/science";
 import { generateId, today } from "@/lib/storage";
 import {
   LineChart,
@@ -18,6 +19,16 @@ import {
 import { Plus, TrendingDown, TrendingUp, Minus } from "lucide-react";
 
 export default function PesoPage() {
+  return (
+    <AppShell>
+      <RouteGuard>
+        <PesoContent />
+      </RouteGuard>
+    </AppShell>
+  );
+}
+
+function PesoContent() {
   const { state, update } = useApp();
   const [showForm, setShowForm] = useState(false);
   const [weight, setWeight] = useState("");
@@ -26,8 +37,9 @@ export default function PesoPage() {
 
   if (!state.profile) return null;
 
-  const { weightEntries, profile } = state;
+  const { weightEntries, profile, macroTargets } = state;
   const trend = analyzeWeightTrend(weightEntries);
+  const avg7d = movingAverageWeight(weightEntries, 7);
 
   const chartData = [...weightEntries]
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -37,20 +49,49 @@ export default function PesoPage() {
     }));
 
   function addEntry() {
-    if (!weight) return;
-    const entry = {
-      id: generateId(),
-      date: today(),
-      weightKg: parseFloat(weight),
-      bodyFatPercent: bodyFat ? parseFloat(bodyFat) : undefined,
-      notes: notes || undefined,
-    };
-    update({ weightEntries: [...weightEntries, entry] });
-    if (state.profile) {
-      update({
-        profile: { ...state.profile, weightKg: parseFloat(weight) },
-      });
+    if (!weight || !profile) return;
+    const weightVal = parseFloat(weight);
+    const dateToday = today();
+    const existingIdx = weightEntries.findIndex((e) => e.date === dateToday);
+
+    let newEntries: typeof weightEntries;
+    if (existingIdx >= 0) {
+      newEntries = weightEntries.map((e, i) =>
+        i === existingIdx
+          ? {
+              ...e,
+              weightKg: weightVal,
+              bodyFatPercent: bodyFat ? parseFloat(bodyFat) : e.bodyFatPercent,
+              notes: notes || e.notes,
+            }
+          : e
+      );
+    } else {
+      newEntries = [
+        ...weightEntries,
+        {
+          id: generateId(),
+          date: dateToday,
+          weightKg: weightVal,
+          bodyFatPercent: bodyFat ? parseFloat(bodyFat) : undefined,
+          notes: notes || undefined,
+        },
+      ];
     }
+
+    const updates: Partial<typeof state> = {
+      weightEntries: newEntries,
+      profile: { ...profile, weightKg: weightVal },
+    };
+
+    if (macroTargets && shouldRecalculateMacros(macroTargets, weightVal)) {
+      const { macros } = recalculateMacrosFromWeight(profile, weightVal);
+      if (confirm(`Tu peso cambió significativamente. ¿Actualizar objetivos a ${macros.calories} kcal?`)) {
+        updates.macroTargets = macros;
+      }
+    }
+
+    update(updates);
     setWeight("");
     setBodyFat("");
     setNotes("");
@@ -83,8 +124,7 @@ export default function PesoPage() {
       : "blue";
 
   return (
-    <AppShell>
-      <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
+    <div className="p-4 lg:p-8 max-w-4xl mx-auto animate-fade-in">
         <PageHeader
           title="Control de peso"
           subtitle="Registra tu peso diario para ajustes semanales precisos"
@@ -95,10 +135,16 @@ export default function PesoPage() {
           }
         />
 
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           <StatCard
             label="Peso actual"
             value={trend.avgWeight || profile.weightKg}
+            unit="kg"
+            color="blue"
+          />
+          <StatCard
+            label="Media 7 días"
+            value={avg7d || trend.avgWeight || profile.weightKg}
             unit="kg"
             color="blue"
           />
@@ -234,7 +280,6 @@ export default function PesoPage() {
             semanales para ajustes, no valores individuales (Helms et al., 2014).
           </p>
         </Card>
-      </div>
-    </AppShell>
+    </div>
   );
 }
