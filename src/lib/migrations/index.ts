@@ -22,6 +22,10 @@ export function migrateState(raw: unknown): AppState {
     current = migrateV1ToV2(current);
   }
 
+  if (current.schemaVersion < 3) {
+    current = migrateV2ToV3(current);
+  }
+
   current.schemaVersion = SCHEMA_VERSION;
   return current;
 }
@@ -49,5 +53,13 @@ function migrateV1ToV2(state: AppState): AppState {
         }
       : null,
     schemaVersion: 2,
+  };
+}
+
+function migrateV2ToV3(state: AppState): AppState {
+  return {
+    ...state,
+    weeklyPlan: state.weeklyPlan ?? null,
+    schemaVersion: 3,
   };
 }

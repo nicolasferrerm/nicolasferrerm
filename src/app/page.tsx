@@ -6,12 +6,12 @@ import { AppShell } from "@/components/Navigation";
 import { Card, StatCard, ProgressBar, Badge, PageHeader } from "@/components/ui";
 import { analyzeWeightTrend } from "@/lib/science";
 import { today, getGoalLabel } from "@/lib/storage";
+import { getTodaySessions, FOCUS_CONFIG, DAY_LABELS, getTodayDayOfWeek } from "@/lib/schedule";
 import {
   Flame,
   Beef,
   Dumbbell,
   TrendingDown,
-  Droplets,
   Brain,
 } from "lucide-react";
 import Link from "next/link";
@@ -31,7 +31,7 @@ export default function DashboardPage() {
     return <Onboarding />;
   }
 
-  const { profile, macroTargets, foodEntries, weightEntries, workoutSessions, activeRoutine } = state;
+  const { profile, macroTargets, foodEntries, weightEntries, workoutSessions, weeklyPlan } = state;
   const dateToday = today();
 
   const todayFood = foodEntries.filter((f) => f.date === dateToday);
@@ -46,9 +46,8 @@ export default function DashboardPage() {
   );
 
   const weightTrend = analyzeWeightTrend(weightEntries);
-  const todayWorkout = activeRoutine?.sessions[
-    weekWorkouts.length % (activeRoutine?.sessions.length || 1)
-  ];
+  const todayPlanned = getTodaySessions(weeklyPlan);
+  const todayDay = getTodayDayOfWeek();
 
   return (
     <AppShell>
@@ -136,35 +135,32 @@ export default function DashboardPage() {
 
           {/* Entreno de hoy */}
           <Card>
-            <h3 className="font-semibold text-white mb-3">Entreno de hoy</h3>
-            {todayWorkout ? (
-              <div>
-                <Badge color="emerald">{todayWorkout.name}</Badge>
-                <p className="text-sm text-zinc-400 mt-3">
-                  {todayWorkout.exercises.length} ejercicios · ~
-                  {todayWorkout.exercises.reduce((s, e) => s + e.sets, 0)} series
-                </p>
-                <ul className="mt-3 space-y-1">
-                  {todayWorkout.exercises.slice(0, 4).map((ex) => (
-                    <li key={ex.id} className="text-xs text-zinc-500">
-                      {ex.name} — {ex.sets}x{ex.reps}
-                    </li>
-                  ))}
-                  {todayWorkout.exercises.length > 4 && (
-                    <li className="text-xs text-zinc-600">
-                      +{todayWorkout.exercises.length - 4} más...
-                    </li>
-                  )}
-                </ul>
-                <Link
-                  href="/rutinas"
-                  className="inline-block mt-4 text-sm text-emerald-400 hover:text-emerald-300"
-                >
-                  Ver rutina completa →
+            <h3 className="font-semibold text-white mb-3">
+              Hoy — {DAY_LABELS[todayDay]}
+            </h3>
+            {todayPlanned.length === 0 ? (
+              <p className="text-sm text-zinc-500">Sin entrenos planificados. <Link href="/rutinas" className="text-emerald-400">Editar plan</Link></p>
+            ) : (
+              <div className="space-y-2">
+                {todayPlanned.map((s) => {
+                  const config = FOCUS_CONFIG[s.focus];
+                  return (
+                    <div key={s.id} className="flex items-center gap-2 p-2 rounded-lg bg-zinc-800/30">
+                      <span>{config.emoji}</span>
+                      <div>
+                        <p className="text-sm text-white font-medium">{s.label}</p>
+                        {s.notes && <p className="text-xs text-zinc-500">{s.notes}</p>}
+                      </div>
+                      {s.focus !== "rest" && (
+                        <Badge color="emerald">{s.focus === "cardio" ? "Cardio" : "Fuerza"}</Badge>
+                      )}
+                    </div>
+                  );
+                })}
+                <Link href="/rutinas" className="inline-block mt-2 text-sm text-emerald-400 hover:text-emerald-300">
+                  Ir a entrenar →
                 </Link>
               </div>
-            ) : (
-              <p className="text-sm text-zinc-500">Sin rutina activa</p>
             )}
           </Card>
         </div>

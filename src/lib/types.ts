@@ -1,4 +1,4 @@
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 export type Gender = "male" | "female" | "other";
 export type Goal = "lose_fat" | "gain_muscle" | "maintain" | "recomp" | "performance";
@@ -8,6 +8,35 @@ export type MuscleGroup = "chest" | "back" | "shoulders" | "biceps" | "triceps" 
 export type MealType = "breakfast" | "lunch" | "dinner" | "snack";
 export type EquipmentType = "full_gym" | "dumbbells_only" | "home_no_equipment" | "bands" | "barbell_rack";
 export type InjuryArea = "knee" | "shoulder" | "lower_back" | "hip" | "wrist" | "ankle";
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+export type SessionFocus =
+  | "rest"
+  | "chest"
+  | "back"
+  | "shoulders"
+  | "legs"
+  | "arms"
+  | "push"
+  | "pull"
+  | "upper"
+  | "lower"
+  | "full_body"
+  | "cardio";
+
+export interface PlannedSession {
+  id: string;
+  focus: SessionFocus;
+  label: string;
+  notes?: string;
+}
+
+export interface WeeklyPlan {
+  id: string;
+  name: string;
+  days: Record<DayOfWeek, PlannedSession[]>;
+  updatedAt: string;
+}
 
 export interface UserProfile {
   name: string;
@@ -141,6 +170,7 @@ export interface AppState {
   foodEntries: FoodEntry[];
   workoutSessions: WorkoutSession[];
   activeRoutine: Routine | null;
+  weeklyPlan: WeeklyPlan | null;
   dailyLogs: DailyLog[];
   weeklyReviews: WeeklyReview[];
   dismissedRecommendations: DismissedRecommendation[];
@@ -155,6 +185,7 @@ export const DEFAULT_APP_STATE: AppState = {
   foodEntries: [],
   workoutSessions: [],
   activeRoutine: null,
+  weeklyPlan: null,
   dailyLogs: [],
   weeklyReviews: [],
   dismissedRecommendations: [],

@@ -5,7 +5,8 @@ import { useApp } from "@/context/AppContext";
 import { AppShell } from "@/components/Navigation";
 import { RouteGuard } from "@/components/RouteGuard";
 import { Card, Button, Badge, PageHeader, Input, Select } from "@/components/ui";
-import { calculateTDEE, calculateMacros, generateRoutine } from "@/lib/science";
+import { calculateTDEE, calculateMacros } from "@/lib/science";
+import { syncRoutineFromPlan } from "@/lib/schedule";
 import { getGoalLabel, getEquipmentLabel } from "@/lib/storage";
 import { EQUIPMENT_OPTIONS, INJURY_OPTIONS } from "@/lib/exercises";
 import type { Goal, ActivityLevel, ExperienceLevel, EquipmentType, InjuryArea, Gender } from "@/lib/types";
@@ -78,18 +79,15 @@ function PerfilContent() {
     };
     const newTdee = calculateTDEE(updated);
     const newMacros = calculateMacros(updated, newTdee);
-    const newRoutine = generateRoutine(
-      goal,
-      experienceLevel,
-      parseInt(trainingDays),
-      equipment,
-      injuries
-    );
+    const plan = state.weeklyPlan;
+    const newRoutine = plan
+      ? syncRoutineFromPlan(plan, updated)
+      : state.activeRoutine;
 
     update({
       profile: updated,
       macroTargets: newMacros,
-      activeRoutine: newRoutine,
+      ...(newRoutine ? { activeRoutine: newRoutine } : {}),
     });
     setEditing(false);
   }

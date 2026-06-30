@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/context/AppContext";
-import { calculateTDEE, calculateMacros, generateRoutine } from "@/lib/science";
+import { calculateTDEE, calculateMacros } from "@/lib/science";
+import { createPresetPlan, syncRoutineFromPlan } from "@/lib/schedule";
 import { generateId, today } from "@/lib/storage";
 import type { Gender, Goal, ActivityLevel, ExperienceLevel, EquipmentType, InjuryArea } from "@/lib/types";
 import { PARQ_QUESTIONS, INJURY_OPTIONS, EQUIPMENT_OPTIONS } from "@/lib/exercises";
@@ -104,17 +105,13 @@ export function Onboarding() {
     const profile = buildProfile();
     const tdee = calculateTDEE(profile);
     const macroTargets = calculateMacros(profile, tdee);
-    const routine = generateRoutine(
-      goal,
-      experienceLevel,
-      parseInt(trainingDays),
-      equipment,
-      injuries
-    );
+    const weeklyPlan = createPresetPlan("bodybuilding", parseInt(trainingDays));
+    const routine = syncRoutineFromPlan(weeklyPlan, profile);
 
     update({
       profile,
       macroTargets,
+      weeklyPlan,
       activeRoutine: routine,
       weightEntries: [
         {
