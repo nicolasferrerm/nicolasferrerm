@@ -1,35 +1,59 @@
-# Nicolas Ferrer
-**Advanced Cybersecurity Specialist | Offensive Security & Architecture**
+# Hi, I'm Nicolas Ferrer
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/nicolasferrer)
-[![Medium](https://img.shields.io/badge/Medium-Read_my_Articles-black?style=flat-square&logo=medium)](https://medium.com/@nicolasferrerm)
+Cybersecurity and information-systems professional in Calgary, Canada, building practical blue-team projects around detection, incident response, identity, network defense, vulnerability management, and automation.
 
-## About Me
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-nicolasferrerm-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrerm)
+[![Email](https://img.shields.io/badge/Email-nicolas.ferrer.security%40gmail.com-EA4335?style=flat&logo=gmail&logoColor=white)](mailto:nicolas.ferrer.security@gmail.com)
+[![Location](https://img.shields.io/badge/Calgary-AB%2C%20Canada-D80621?style=flat&logo=googlemaps&logoColor=white)](https://www.google.com/maps/place/Calgary,+AB)
 
-I am a Cybersecurity Specialist focused on securing modern infrastructure and web applications. My approach goes beyond traditional vulnerability scanning; I specialize in uncovering complex business logic flaws, API vulnerabilities, and architectural misconfigurations. I bridge the gap between offensive testing and engineering mitigation.
+## About me
 
-Currently based in/targeting the Canadian tech market, with a focus on delivering actionable security intelligence for enterprise environments.
+- Information Systems Security Diploma candidate at **SAIT** (expected August 2026).
+- Background in software development, systems analysis, IT support, and security operations.
+- President of SAIT's **CyberGuardians Club** and first-place finisher in the 2025 SAIT SADT Summer Cybersecurity CTF individual competition.
+- Bachelor's degree assessed by IQAS as comparable to a Canadian four-year Bachelor of Science.
+- Bilingual in English and Spanish.
 
-## Core Focus Areas
+## Role I'm seeking
 
-- Offensive Security: Advanced Web & API Exploitation, Logic Flaws (BOLA/IDOR), Identity & Access Management vulnerabilities (OAuth/JWT).
-- - Security Engineering: Threat Modeling, Secure Architecture Review, Mitigation Strategies for Modern Stacks (Cloud, Next.js, APIs).
-  - - Tooling & Automation: Developing specialized Python-based tooling to automate complex security testing workflows that standard scanners miss.
-   
-    - ## Featured Security Tooling
-   
-    - * [API Logic Security Fuzzer (En Desarrollo)](#) - A Python-based framework designed to automate the discovery of Broken Object Level Authorization (BOLA) vulnerabilities in REST APIs by managing and cross-referencing multiple JWT sessions.
-     
-      * ## Recent Security Research
-     
-      * * [Medium] *Upcoming: The Architecture of API Logic Flaws - Moving Beyond Injection*
-       
-        * ## Tech Stack & Proficiencies
-       
-        * - Security: Burp Suite Professional, Owasp ZAP, Postman, Custom Python Tooling.
-          - - Languages: Python (Security Automation), Bash, Go (Familiar).
-            - - Concepts: OWASP Top 10, API Security, Cloud Security Posture, Identity Management.
-             
-              - ---
-              *"Security is not just about breaking things; it's about understanding complex systems better than the people who built them, and helping them build resilience."*
-              
+I am seeking an entry-level **SOC Analyst, Cybersecurity Analyst, Incident Response, or Security Operations** role in Canada where I can combine careful investigation, clear documentation, and Python/PowerShell automation. I am available for full-time opportunities after completing my SAIT diploma in August 2026.
+
+## Core technologies
+
+| Area | Technologies and practices |
+|---|---|
+| Security operations | Event triage, detection engineering, incident response, forensic analysis, MITRE ATT&CK |
+| Identity and Windows | Active Directory labs, Windows Security events, identity monitoring, system hardening |
+| Network and vulnerability defense | TCP/IP, segmentation, vulnerability assessment, CVSS, EPSS, CISA KEV |
+| Automation and development | Python, PowerShell, SQL, Git, GitHub Actions, JSON, REST APIs |
+| Platforms | Windows, Linux, virtualized labs; exposure to Microsoft Sentinel, Splunk, and Elastic workflows |
+
+## Featured projects
+
+| Project | Evidence in the repository |
+|---|---|
+| [Enterprise SOC Lab](https://github.com/nicolasferrerm/enterprise-soc-lab) | Synthetic telemetry, time-window correlation, ATT&CK mappings, CLI, tests, and CI |
+| [Windows Incident Investigation](https://github.com/nicolasferrerm/windows-incident-investigation) | Bounded PowerShell triage, SHA-256 evidence manifest, UTC timeline, and analyst context |
+| [Network Security Architecture](https://github.com/nicolasferrerm/network-security-architecture) | Segmented reference design and policy-as-code guardrails validated in CI |
+| [Vulnerability Management Program](https://github.com/nicolasferrerm/vulnerability-management-program) | Transparent CVSS/EPSS/KEV prioritization, remediation SLAs, policy, and tests |
+| [Active Directory Monitoring](https://github.com/nicolasferrerm/active-directory-monitoring) | High-value AD event detections, ATT&CK mappings, safe sample data, and collection script |
+| [Python Security Automation](https://github.com/nicolasferrerm/python-security-automation) | IOC normalization and extraction, IPv4 validation, streaming file hashes, and unit tests |
+
+Every featured repository uses synthetic data or reference configurations, documents its limitations, and runs automated quality checks in GitHub Actions.
+
+## Certifications and achievements
+
+- **Google Cybersecurity Professional Certificate** — Google/Coursera, April 2025.
+- **Cybersecurity Architecture** — IBM/Coursera, April 2025.
+- **Operating Systems: Overview, Administration, and Security** — IBM/Coursera, April 2025.
+- **First place, SAIT SADT Summer Cybersecurity CTF** — individual competition, July 2025.
+
+## Current learning
+
+I am completing the final stage of SAIT's Information Systems Security Diploma while deepening practical skills in SOC workflows, Windows incident investigation, Active Directory monitoring, network architecture, risk-based vulnerability management, and security automation. Current project work emphasizes reproducibility, safe synthetic evidence, automated tests, and documentation that another analyst can follow.
+
+## Contact
+
+- LinkedIn: [linkedin.com/in/nicolasferrerm](https://www.linkedin.com/in/nicolasferrerm)
+- Email: [nicolas.ferrer.security@gmail.com](mailto:nicolas.ferrer.security@gmail.com)
+- GitHub: [@nicolasferrerm](https://github.com/nicolasferrerm)
