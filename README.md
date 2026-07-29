@@ -3,7 +3,7 @@
 Cybersecurity and information-systems professional in Calgary, Canada, building practical blue-team projects around detection, incident response, identity, network defense, vulnerability management, and automation.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-nicolasferrerm-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrerm)
-[![Email](https://img.shields.io/badge/Email-nicolas.ferrer.security%40gmail.com-EA4335?style=flat&logo=gmail&logoColor=white)](mailto:nicolas.ferrer.security@gmail.com)
+[![Email](https://img.shields.io/badge/Email-ferrernicolas%40proton.me-6D4AFF?style=flat&logo=protonmail&logoColor=white)](mailto:ferrernicolas@proton.me)
 [![Location](https://img.shields.io/badge/Calgary-AB%2C%20Canada-D80621?style=flat&logo=googlemaps&logoColor=white)](https://www.google.com/maps/place/Calgary,+AB)
 
 ## About me
@@ -41,6 +41,17 @@ I am seeking an entry-level **SOC Analyst, Cybersecurity Analyst, Incident Respo
 
 Every featured repository uses synthetic data or reference configurations, documents its limitations, and runs automated quality checks in GitHub Actions.
 
+## Security applications
+
+These larger applications complement the six focused projects above and demonstrate secure product engineering from backend controls to frontend delivery.
+
+| Application | Portfolio evidence |
+|---|---|
+| [AEGIS Privacy Engineering Lab](https://github.com/nicolasferrerm/aegis-privacy-engineering) | Local-first FastAPI and React architecture, synthetic privacy workflows, security tests, linting, and CI |
+| [KRONOS Detection Validation](https://github.com/nicolasferrerm/kronos-detection-validation) | Safe-by-default ATT&CK identity scenarios, SIEM adapters, automated tests, and HTML reporting |
+| [NETSPECTRA Network Risk Platform](https://github.com/nicolasferrerm/netspectra-network-risk) | JWT/RBAC controls, private-target scan guardrails, asset-risk workflows, tests, and an optimized React build |
+| [BOLA Strike Enterprise](https://github.com/nicolasferrerm/BOLA-Strike-Enterprise) | API authorization testing, evidence-oriented reporting, backend/frontend validation, and CI |
+
 ## Certifications and achievements
 
 - **Google Cybersecurity Professional Certificate** — Google/Coursera, April 2025.
@@ -50,10 +61,10 @@ Every featured repository uses synthetic data or reference configurations, docum
 
 ## Current learning
 
-I am completing the final stage of SAIT's Information Systems Security Diploma while deepening practical skills in SOC workflows, Windows incident investigation, Active Directory monitoring, network architecture, risk-based vulnerability management, and security automation. Current project work emphasizes reproducibility, safe synthetic evidence, automated tests, and documentation that another analyst can follow.
+I am completing the final stage of SAIT's Information Systems Security Diploma while deepening practical skills in SOC workflows, Windows incident investigation, Active Directory monitoring, network architecture, risk-based vulnerability management, security automation, and secure application engineering. Current project work emphasizes reproducibility, safe synthetic evidence, automated tests, and documentation that another analyst can follow.
 
 ## Contact
 
 - LinkedIn: [linkedin.com/in/nicolasferrerm](https://www.linkedin.com/in/nicolasferrerm)
-- Email: [nicolas.ferrer.security@gmail.com](mailto:nicolas.ferrer.security@gmail.com)
+- Email: [ferrernicolas@proton.me](mailto:ferrernicolas@proton.me)
 - GitHub: [@nicolasferrerm](https://github.com/nicolasferrerm)
