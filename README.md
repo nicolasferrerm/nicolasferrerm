@@ -2,7 +2,7 @@
 
 Cybersecurity and information-systems professional in Calgary, Canada, building practical blue-team projects around detection, incident response, identity, network defense, vulnerability management, and automation.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-nicolasferrerm-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrerm)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Nicolas_Ferrer-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrermendoza-developer/)
 [![Email](https://img.shields.io/badge/Email-ferrernicolas%40proton.me-6D4AFF?style=flat&logo=protonmail&logoColor=white)](mailto:ferrernicolas@proton.me)
 [![Location](https://img.shields.io/badge/Calgary-AB%2C%20Canada-D80621?style=flat&logo=googlemaps&logoColor=white)](https://www.google.com/maps/place/Calgary,+AB)
 
@@ -65,6 +65,6 @@ I am completing the final stage of SAIT's Information Systems Security Diploma w
 
 ## Contact
 
-- LinkedIn: [linkedin.com/in/nicolasferrerm](https://www.linkedin.com/in/nicolasferrerm)
+- LinkedIn: [linkedin.com/in/nicolasferrermendoza-developer](https://www.linkedin.com/in/nicolasferrermendoza-developer/)
 - Email: [ferrernicolas@proton.me](mailto:ferrernicolas@proton.me)
 - GitHub: [@nicolasferrerm](https://github.com/nicolasferrerm)
