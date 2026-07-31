@@ -1,70 +1,98 @@
 # Hi, I'm Nicolas Ferrer
 
-Cybersecurity and information-systems professional in Calgary, Canada, building practical blue-team projects around detection, incident response, identity, network defense, vulnerability management, and automation.
+Junior cybersecurity analyst in Calgary, Canada, focused on SOC operations,
+incident response, detection engineering, identity, network defense, and
+defensive automation.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Nicolas_Ferrer-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrermendoza-developer/)
-[![Email](https://img.shields.io/badge/Email-ferrernicolas%40proton.me-6D4AFF?style=flat&logo=protonmail&logoColor=white)](mailto:ferrernicolas@proton.me)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Nicolas_Ferrer-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrerm)
+[![Email](https://img.shields.io/badge/Email-nicolas.ferrer.security%40gmail.com-365C13?style=flat&logo=gmail&logoColor=white)](mailto:nicolas.ferrer.security@gmail.com)
 [![Location](https://img.shields.io/badge/Calgary-AB%2C%20Canada-D80621?style=flat&logo=googlemaps&logoColor=white)](https://www.google.com/maps/place/Calgary,+AB)
 
 ## About me
 
-- Information Systems Security Diploma candidate at **SAIT** (expected August 2026).
-- Background in software development, systems analysis, IT support, and security operations.
-- President of SAIT's **CyberGuardians Club** and first-place finisher in the 2025 SAIT SADT Summer Cybersecurity CTF individual competition.
-- Bachelor's degree assessed by IQAS as comparable to a Canadian four-year Bachelor of Science.
+- Systems Engineering graduate and SAIT Information Systems Security Diploma
+  candidate, expected August 2026.
+- Prior experience in IT support, infrastructure maintenance, backup and
+  recovery, troubleshooting, and customer communication.
+- President of SAIT's CyberGuardians Club.
+- First Place Team, SAIT SADT Summer Cybersecurity CTF.
 - Bilingual in English and Spanish.
 
-## Role I'm seeking
+## Role I am seeking
 
-I am seeking an entry-level **SOC Analyst, Cybersecurity Analyst, Incident Response, or Security Operations** role in Canada where I can combine careful investigation, clear documentation, and Python/PowerShell automation. I am available for full-time opportunities after completing my SAIT diploma in August 2026.
+I am seeking an entry-level SOC Analyst, Junior Cybersecurity Analyst, Security
+Operations, or Incident Response role in Canada. I bring a systems foundation,
+careful evidence handling, clear documentation, and practical Python and
+PowerShell automation. I am available for full-time opportunities from
+September 2026.
 
-## Core technologies
+## Proof at a glance
 
-| Area | Technologies and practices |
-|---|---|
-| Security operations | Event triage, detection engineering, incident response, forensic analysis, MITRE ATT&CK |
-| Identity and Windows | Active Directory labs, Windows Security events, identity monitoring, system hardening |
-| Network and vulnerability defense | TCP/IP, segmentation, vulnerability assessment, CVSS, EPSS, CISA KEV |
-| Automation and development | Python, PowerShell, SQL, Git, GitHub Actions, JSON, REST APIs |
-| Platforms | Windows, Linux, virtualized labs; exposure to Microsoft Sentinel, Splunk, and Elastic workflows |
+| Evidence | Verified portfolio result |
+| --- | --- |
+| Focused case studies | 6 public, CI-backed repositories |
+| Automated verification | 26 passing tests across the six repositories |
+| Detection coverage | 6 ATT&CK-mapped detections |
+| Portable SIEM content | 2 Sigma rules and 2 Microsoft Sentinel KQL translations |
+| Analyst communication | Technical incident report and executive decision summary |
+| Safety boundary | Synthetic or authorized data, explicit limitations, no unsafe automation |
 
-## Featured projects
+## Core capabilities
+
+| Area | Evidence and practices |
+| --- | --- |
+| Security operations | Alert triage, event correlation, timelines, escalation, tuning, incident reporting |
+| Detection engineering | Python correlations, Sigma, Sentinel KQL, ATT&CK mapping, content-integrity tests |
+| Identity and Windows | Windows Security events, Active Directory, Kerberos, PowerShell, privileged-group monitoring |
+| Network and risk | TCP/IP, segmentation, firewall policy, CVSS, EPSS, CISA KEV, remediation SLAs |
+| Analyst automation | Python, PowerShell, JSON/JSONL, IOC handling, SHA-256, offline `.eml` triage |
+| Engineering practice | Git, GitHub Actions, unit tests, safe samples, reproducible documentation |
+
+## Featured casework
 
 | Project | Evidence in the repository |
-|---|---|
-| [Enterprise SOC Lab](https://github.com/nicolasferrerm/enterprise-soc-lab) | Synthetic telemetry, time-window correlation, ATT&CK mappings, CLI, tests, and CI |
-| [Windows Incident Investigation](https://github.com/nicolasferrerm/windows-incident-investigation) | Bounded PowerShell triage, SHA-256 evidence manifest, UTC timeline, and analyst context |
+| --- | --- |
+| [Enterprise SOC Lab](https://github.com/nicolasferrerm/enterprise-soc-lab) | Tested correlations, manifest, Sigma, Sentinel KQL, coverage notes, and triage/tuning playbook |
+| [Windows Incident Investigation](https://github.com/nicolasferrerm/windows-incident-investigation) | Bounded PowerShell collection, SHA-256 evidence manifest, UTC timeline, and analyst context |
 | [Network Security Architecture](https://github.com/nicolasferrerm/network-security-architecture) | Segmented reference design and policy-as-code guardrails validated in CI |
 | [Vulnerability Management Program](https://github.com/nicolasferrerm/vulnerability-management-program) | Transparent CVSS/EPSS/KEV prioritization, remediation SLAs, policy, and tests |
-| [Active Directory Monitoring](https://github.com/nicolasferrerm/active-directory-monitoring) | High-value AD event detections, ATT&CK mappings, safe sample data, and collection script |
-| [Python Security Automation](https://github.com/nicolasferrerm/python-security-automation) | IOC normalization and extraction, IPv4 validation, streaming file hashes, and unit tests |
+| [Active Directory Monitoring](https://github.com/nicolasferrerm/active-directory-monitoring) | Four high-value AD detections, ATT&CK mappings, safe sample data, and collection script |
+| [Python Security Automation](https://github.com/nicolasferrerm/python-security-automation) | IOC handling, streamed hashing, and explainable offline phishing triage with eight tests |
 
-Every featured repository uses synthetic data or reference configurations, documents its limitations, and runs automated quality checks in GitHub Actions.
+Every featured repository uses synthetic data or reference configurations,
+documents what the evidence does not prove, and runs automated quality checks.
+The portable detection files are portfolio-lab translations and still require
+target-schema, threshold, cost, and allowlist validation before production use.
 
 ## Security applications
 
-These larger applications complement the six focused projects above and demonstrate secure product engineering from backend controls to frontend delivery.
+These larger applications complement the focused casework with secure product
+engineering:
 
 | Application | Portfolio evidence |
-|---|---|
-| [AEGIS Privacy Engineering Lab](https://github.com/nicolasferrerm/aegis-privacy-engineering) | Local-first FastAPI and React architecture, synthetic privacy workflows, security tests, linting, and CI |
-| [KRONOS Detection Validation](https://github.com/nicolasferrerm/kronos-detection-validation) | Safe-by-default ATT&CK identity scenarios, SIEM adapters, automated tests, and HTML reporting |
-| [NETSPECTRA Network Risk Platform](https://github.com/nicolasferrerm/netspectra-network-risk) | JWT/RBAC controls, private-target scan guardrails, asset-risk workflows, tests, and an optimized React build |
-| [BOLA Strike Enterprise](https://github.com/nicolasferrerm/BOLA-Strike-Enterprise) | API authorization testing, evidence-oriented reporting, backend/frontend validation, and CI |
+| --- | --- |
+| [AEGIS Privacy Engineering Lab](https://github.com/nicolasferrerm/aegis-privacy-engineering) | Local-first privacy workflows, backend controls, tests, linting, and CI |
+| [KRONOS Detection Validation](https://github.com/nicolasferrerm/kronos-detection-validation) | Safe ATT&CK identity scenarios, SIEM adapters, tests, and HTML reporting |
+| [NETSPECTRA Network Risk Platform](https://github.com/nicolasferrerm/netspectra-network-risk) | JWT/RBAC controls, private-target guardrails, asset-risk workflows, and tests |
+| [BOLA Strike Enterprise](https://github.com/nicolasferrerm/BOLA-Strike-Enterprise) | API authorization testing, evidence-oriented reporting, and full-stack validation |
 
-## Certifications and achievements
+## Certifications and achievement
 
-- **Google Cybersecurity Professional Certificate** — Google/Coursera, April 2025.
-- **Cybersecurity Architecture** — IBM/Coursera, April 2025.
-- **Operating Systems: Overview, Administration, and Security** — IBM/Coursera, April 2025.
-- **First place, SAIT SADT Summer Cybersecurity CTF** — individual competition, July 2025.
+- Google Cybersecurity Professional Certificate - Google/Coursera, April 2025.
+- Cybersecurity Architecture - IBM/Coursera, April 2025.
+- Operating Systems: Administration and Security - IBM/Coursera, April 2025.
+- First Place Team - SAIT SADT Summer Cybersecurity CTF.
 
 ## Current learning
 
-I am completing the final stage of SAIT's Information Systems Security Diploma while deepening practical skills in SOC workflows, Windows incident investigation, Active Directory monitoring, network architecture, risk-based vulnerability management, security automation, and secure application engineering. Current project work emphasizes reproducibility, safe synthetic evidence, automated tests, and documentation that another analyst can follow.
+I am completing the final stage of SAIT's Information Systems Security Diploma
+while deepening Microsoft security operations, endpoint telemetry, detection
+tuning, cloud identity, and professional incident communication. Current work
+prioritizes reproducibility, safe evidence, measured tests, and documentation
+that another analyst can challenge and follow.
 
 ## Contact
 
-- LinkedIn: [linkedin.com/in/nicolasferrermendoza-developer](https://www.linkedin.com/in/nicolasferrermendoza-developer/)
-- Email: [ferrernicolas@proton.me](mailto:ferrernicolas@proton.me)
+- LinkedIn: [linkedin.com/in/nicolasferrerm](https://www.linkedin.com/in/nicolasferrerm)
+- Email: [nicolas.ferrer.security@gmail.com](mailto:nicolas.ferrer.security@gmail.com)
 - GitHub: [@nicolasferrerm](https://github.com/nicolasferrerm)
