@@ -4,8 +4,8 @@ Junior cybersecurity analyst in Calgary, Canada, focused on SOC operations,
 incident response, detection engineering, identity, network defense, and
 defensive automation.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Nicolas_Ferrer-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrerm)
-[![Email](https://img.shields.io/badge/Email-nicolas.ferrer.security%40gmail.com-365C13?style=flat&logo=gmail&logoColor=white)](mailto:nicolas.ferrer.security@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Nicolas_Ferrer-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrermendoza-developer/)
+[![Email](https://img.shields.io/badge/Email-ferrernicolas%40proton.me-6D4AFF?style=flat&logo=protonmail&logoColor=white)](mailto:ferrernicolas@proton.me)
 [![Location](https://img.shields.io/badge/Calgary-AB%2C%20Canada-D80621?style=flat&logo=googlemaps&logoColor=white)](https://www.google.com/maps/place/Calgary,+AB)
 
 ## About me
@@ -93,6 +93,6 @@ that another analyst can challenge and follow.
 
 ## Contact
 
-- LinkedIn: [linkedin.com/in/nicolasferrerm](https://www.linkedin.com/in/nicolasferrerm)
-- Email: [nicolas.ferrer.security@gmail.com](mailto:nicolas.ferrer.security@gmail.com)
+- LinkedIn: [linkedin.com/in/nicolasferrermendoza-developer](https://www.linkedin.com/in/nicolasferrermendoza-developer/)
+- Email: [ferrernicolas@proton.me](mailto:ferrernicolas@proton.me)
 - GitHub: [@nicolasferrerm](https://github.com/nicolasferrerm)
