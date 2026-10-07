@@ -1,98 +1,82 @@
 # Hi, I'm Nicolas Ferrer
 
-Junior cybersecurity analyst in Calgary, Canada, focused on SOC operations,
-incident response, detection engineering, identity, network defense, and
-defensive automation.
+Cybersecurity analyst in Calgary, Canada. Information Systems Security graduate
+(SAIT, 2026) with a year and a half of hands-on IT support experience.
 
+[![Portfolio](https://img.shields.io/badge/Portfolio-nicolasferrerm.com-0c2929?style=flat)](https://nicolasferrerm.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Nicolas_Ferrer-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nicolasferrermendoza-developer/)
 [![Email](https://img.shields.io/badge/Email-ferrernicolas%40proton.me-6D4AFF?style=flat&logo=protonmail&logoColor=white)](mailto:ferrernicolas@proton.me)
 [![Location](https://img.shields.io/badge/Calgary-AB%2C%20Canada-D80621?style=flat&logo=googlemaps&logoColor=white)](https://www.google.com/maps/place/Calgary,+AB)
 
 ## About me
 
-- Systems Engineering graduate and SAIT Information Systems Security Diploma
-  candidate, expected August 2026.
-- Prior experience in IT support, infrastructure maintenance, backup and
-  recovery, troubleshooting, and customer communication.
-- President of SAIT's CyberGuardians Club.
-- First Place Team, SAIT SADT Summer Cybersecurity CTF.
-- Bilingual in English and Spanish.
+- Information Systems Security diploma, SAIT. Program completed August 2026.
+- Systems Engineering degree, assessed by IQAS as comparable to a four-year
+  Canadian Bachelor of Science.
+- A year and a half as an IT Support Technician for a three-site medical imaging
+  company with 75-100 users: Active Directory and Microsoft 365 accounts, a
+  2-3 TB OneDrive migration, daily backup checks, network configuration, and
+  malware response.
+- 1st place, ALI1C3 in PWNderland Capture the Flag (SAIT, July 2025), and 3rd
+  place, Capture the Flag hosted by KPMG (October 2025).
+- President of SAIT's CyberGuardians Club, July 2025 to August 2026.
+- Fluent in English and Spanish.
 
-## Role I am seeking
+## Role I am looking for
 
-I am seeking an entry-level SOC Analyst, Junior Cybersecurity Analyst, Security
-Operations, or Incident Response role in Canada. I bring a systems foundation,
-careful evidence handling, clear documentation, and practical Python and
-PowerShell automation. I am available for full-time opportunities from
-September 2026.
+An entry-level SOC analyst, cybersecurity analyst, or IT security role. I am
+based in Calgary, authorized to work in Canada, and available now.
 
-## Proof at a glance
+Resume and full work history: [nicolasferrerm.com](https://nicolasferrerm.com)
 
-| Evidence | Verified portfolio result |
+## Security lab projects
+
+Small labs I built in the summer of 2026 to practise one task at a time. Each is
+a few hundred lines of Python or PowerShell on synthetic data, with tests and a
+README that says what it does not cover. They are lab exercises, not production
+work.
+
+| Lab | What it does |
 | --- | --- |
-| Focused case studies | 6 public, CI-backed repositories |
-| Automated verification | 26 passing tests across the six repositories |
-| Detection coverage | 6 ATT&CK-mapped detections |
-| Portable SIEM content | 2 Sigma rules and 2 Microsoft Sentinel KQL translations |
-| Analyst communication | Technical incident report and executive decision summary |
-| Safety boundary | Synthetic or authorized data, explicit limitations, no unsafe automation |
+| [SOC Detection Lab](https://github.com/nicolasferrerm/enterprise-soc-lab) | Two tested detections on synthetic Windows events, each also written as a Sigma rule and a Microsoft Sentinel KQL query |
+| [Windows Triage Timeline](https://github.com/nicolasferrerm/windows-incident-investigation) | PowerShell triage collector and Python timeline builder with SHA-256 hashing and UTC normalization |
+| [Network Segmentation Policy Validator](https://github.com/nicolasferrerm/network-security-architecture) | A segmented reference network described as JSON, with five automated policy checks |
+| [Vulnerability Prioritization Model](https://github.com/nicolasferrerm/vulnerability-management-program) | Ranks findings by CVSS, EPSS, CISA KEV status, exposure, and asset criticality |
+| [Active Directory Event Detections](https://github.com/nicolasferrerm/active-directory-monitoring) | Four detections over exported Windows Security events, mapped to ATT&CK |
+| [Phishing Triage and IOC Toolkit](https://github.com/nicolasferrerm/python-security-automation) | Offline `.eml` phishing triage, indicator normalization, and file hashing |
 
-## Core capabilities
+## Other projects
 
-| Area | Evidence and practices |
+| Project | What it is |
 | --- | --- |
-| Security operations | Alert triage, event correlation, timelines, escalation, tuning, incident reporting |
-| Detection engineering | Python correlations, Sigma, Sentinel KQL, ATT&CK mapping, content-integrity tests |
-| Identity and Windows | Windows Security events, Active Directory, Kerberos, PowerShell, privileged-group monitoring |
-| Network and risk | TCP/IP, segmentation, firewall policy, CVSS, EPSS, CISA KEV, remediation SLAs |
-| Analyst automation | Python, PowerShell, JSON/JSONL, IOC handling, SHA-256, offline `.eml` triage |
-| Engineering practice | Git, GitHub Actions, unit tests, safe samples, reproducible documentation |
+| [AEGIS Privacy Engineering Lab](https://github.com/nicolasferrerm/aegis-privacy-engineering) | Local-first privacy engineering lab with FastAPI, React, and security tests |
+| [KRONOS Detection Validation](https://github.com/nicolasferrerm/kronos-detection-validation) | Identity detection validation with ATT&CK mapping and SIEM adapters |
+| [NETSPECTRA Network Risk](https://github.com/nicolasferrerm/netspectra-network-risk) | Network visibility and risk tool with FastAPI role-based access and private-target guardrails |
 
-## Featured casework
+## Skills
 
-| Project | Evidence in the repository |
-| --- | --- |
-| [Enterprise SOC Lab](https://github.com/nicolasferrerm/enterprise-soc-lab) | Tested correlations, manifest, Sigma, Sentinel KQL, coverage notes, and triage/tuning playbook |
-| [Windows Incident Investigation](https://github.com/nicolasferrerm/windows-incident-investigation) | Bounded PowerShell collection, SHA-256 evidence manifest, UTC timeline, and analyst context |
-| [Network Security Architecture](https://github.com/nicolasferrerm/network-security-architecture) | Segmented reference design and policy-as-code guardrails validated in CI |
-| [Vulnerability Management Program](https://github.com/nicolasferrerm/vulnerability-management-program) | Transparent CVSS/EPSS/KEV prioritization, remediation SLAs, policy, and tests |
-| [Active Directory Monitoring](https://github.com/nicolasferrerm/active-directory-monitoring) | Four high-value AD detections, ATT&CK mappings, safe sample data, and collection script |
-| [Python Security Automation](https://github.com/nicolasferrerm/python-security-automation) | IOC handling, streamed hashing, and explainable offline phishing triage with eight tests |
+- **Systems and identity:** Windows Server, Active Directory, Group Policy,
+  Microsoft 365 admin center, OneDrive, VMware vSphere, backup and restore,
+  Linux command line.
+- **Networking:** TCP/IP, subnetting, DHCP, DNS troubleshooting, managed
+  switches, routers, wireless; Fortinet, Cisco, and TP-Link equipment.
+- **Security testing:** Nmap, Wireshark, Burp Suite, Metasploit Framework,
+  Netcat, Hydra, Gobuster.
+- **Security operations:** malware containment and remediation, endpoint
+  protection (McAfee Enterprise), Windows patching, SIEM and IDS fundamentals,
+  Splunk (training in progress).
+- **Scripting:** Python, PowerShell, and SQL at a foundational level.
 
-Every featured repository uses synthetic data or reference configurations,
-documents what the evidence does not prove, and runs automated quality checks.
-The portable detection files are portfolio-lab translations and still require
-target-schema, threshold, cost, and allowlist validation before production use.
+## Certifications and training
 
-## Security applications
-
-These larger applications complement the focused casework with secure product
-engineering:
-
-| Application | Portfolio evidence |
-| --- | --- |
-| [AEGIS Privacy Engineering Lab](https://github.com/nicolasferrerm/aegis-privacy-engineering) | Local-first privacy workflows, backend controls, tests, linting, and CI |
-| [KRONOS Detection Validation](https://github.com/nicolasferrerm/kronos-detection-validation) | Safe ATT&CK identity scenarios, SIEM adapters, tests, and HTML reporting |
-| [NETSPECTRA Network Risk Platform](https://github.com/nicolasferrerm/netspectra-network-risk) | JWT/RBAC controls, private-target guardrails, asset-risk workflows, and tests |
-| [BOLA Strike Enterprise](https://github.com/nicolasferrerm/BOLA-Strike-Enterprise) | API authorization testing, evidence-oriented reporting, and full-stack validation |
-
-## Certifications and achievement
-
-- Google Cybersecurity Professional Certificate - Google/Coursera, April 2025.
-- Cybersecurity Architecture - IBM/Coursera, April 2025.
-- Operating Systems: Administration and Security - IBM/Coursera, April 2025.
-- First Place Team - SAIT SADT Summer Cybersecurity CTF.
-
-## Current learning
-
-I am completing the final stage of SAIT's Information Systems Security Diploma
-while deepening Microsoft security operations, endpoint telemetry, detection
-tuning, cloud identity, and professional incident communication. Current work
-prioritizes reproducibility, safe evidence, measured tests, and documentation
-that another analyst can challenge and follow.
+- Google Cybersecurity Professional Certificate, Google / Coursera, April 2025.
+- IBM on Coursera, April 2025: Incident Response and Digital Forensics;
+  Penetration Testing, Threat Hunting, and Cryptography; Cybersecurity
+  Architecture.
+- Complete Guide to PowerShell 7, LinkedIn Learning, April 2026.
 
 ## Contact
 
+- Portfolio: [nicolasferrerm.com](https://nicolasferrerm.com)
 - LinkedIn: [linkedin.com/in/nicolasferrermendoza-developer](https://www.linkedin.com/in/nicolasferrermendoza-developer/)
 - Email: [ferrernicolas@proton.me](mailto:ferrernicolas@proton.me)
-- GitHub: [@nicolasferrerm](https://github.com/nicolasferrerm)
